@@ -40,10 +40,10 @@ def forecast(settings, positions, inflation):
     # Fill in missing start and end dates with min or min timestamps
     positions["start_date"] = positions["start_date"].fillna(
         value=pd.Timestamp.min
-    )  # .dt.date
+    ) 
     positions["end_date"] = positions["end_date"].fillna(
         value=pd.Timestamp.max
-    )  # .dt.date
+    )  
 
     # Calculate monthly salary, bonus, commission, and fringe amounts. Shifts these values from columns to rows.
     forecast_df = positions.assign(
