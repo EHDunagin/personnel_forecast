@@ -38,12 +38,8 @@ def forecast(settings, positions, inflation):
     )
 
     # Fill in missing start and end dates with min or min timestamps
-    positions["start_date"] = positions["start_date"].fillna(
-        value=pd.Timestamp.min
-    ) 
-    positions["end_date"] = positions["end_date"].fillna(
-        value=pd.Timestamp.max
-    )  
+    positions["start_date"] = positions["start_date"].fillna(value=pd.Timestamp.min)
+    positions["end_date"] = positions["end_date"].fillna(value=pd.Timestamp.max)
 
     # Calculate monthly salary, bonus, commission, and fringe amounts. Shifts these values from columns to rows.
     forecast_df = positions.assign(
@@ -124,8 +120,13 @@ def get_inputs(fpath):
 if __name__ == "__main__":
     # Prompt for filepath
     fpath = filedialog.askopenfilename(
-        filetypes=[("Microsoft Excel Worksheet", "*.xlsx")]
+        title="Select inputs file", filetypes=[("Microsoft Excel Worksheet", "*.xlsx")]
+    )
+
+    output_path = (
+        filedialog.askdirectory(title="Select output directory ")
+        + "/output_personnel_forecast.csv"
     )
 
     settings, positions, inflation = get_inputs(fpath)
-    forecast(settings, positions, inflation)
+    forecast(settings, positions, inflation).to_csv(output_path)
