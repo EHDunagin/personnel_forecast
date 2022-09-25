@@ -51,11 +51,8 @@ def personnel_forecast(date_df, fringe, positions):
     of forecast range with rows for salary bonus commission and fringe.
     """
 
-<<<<<<< HEAD
-    # Fill in missing start and end dates with min or max timestamps
-=======
+
     # Fill in missing employee start and end dates with min or max timestamps
->>>>>>> relateditems
     positions["start_date"] = positions["start_date"].fillna(value=pd.Timestamp.min)
     positions["end_date"] = positions["end_date"].fillna(value=pd.Timestamp.max)
 
