@@ -1,11 +1,37 @@
 import pandas as pd
 from tkinter import filedialog
 
+def date_range(start, periods):
+    """
+    Input -> 
+    start - date from which to start projection. Precision at a monthly level will be used.
+    periods - integer indicating number of months to project
+    Output -> DataFrame of month start and end dates
 
-def forecast(settings, positions, inflation):
+    Creates and returns DataFrame of month start and end dates from start date and number of months.
+    """
+   
+    date_df = pd.DataFrame(
+        data={
+            "month_starts": pd.date_range(
+                start=start.replace(day=1),
+                periods=periods,
+                freq="MS",
+            ),
+            "month_ends": pd.date_range(
+                start=start,
+                periods=periods,
+                freq="M",
+            ),
+        }
+    )
+
+    return date_df
+
+def forecast(date_df, fringe, positions, inflation):
     """
     Input -> DataFrames with input information to use to generate forecast
-        settings: contains start date, fringe rate, and months to forecast
+        
         positions: information about positions to forecast includes columns
             position_id
             position_title
@@ -21,23 +47,8 @@ def forecast(settings, positions, inflation):
     Output -> DataFrame of forecast of expense by employee for each month from start to end (based on number of months)
     of forecast range with rows for salary bonus commission and fringe.
     """
-    # Creates DataFrame of month start and end dates from start date and number of months.
-    date_df = pd.DataFrame(
-        data={
-            "month_starts": pd.date_range(
-                start=settings.loc["start_date", "setting"].replace(day=1),
-                periods=settings.loc["months", "setting"],
-                freq="MS",
-            ),
-            "month_ends": pd.date_range(
-                start=settings.loc["start_date", "setting"],
-                periods=settings.loc["months", "setting"],
-                freq="M",
-            ),
-        }
-    )
-
-    # Fill in missing start and end dates with min or min timestamps
+    
+    # Fill in missing employee start and end dates with min or min timestamps
     positions["start_date"] = positions["start_date"].fillna(value=pd.Timestamp.min)
     positions["end_date"] = positions["end_date"].fillna(value=pd.Timestamp.max)
 
@@ -46,7 +57,7 @@ def forecast(settings, positions, inflation):
         salary=positions["salary_annual"] / 12,
         bonus=positions["salary_annual"] * positions["bonus_rate"] / 12,
         commission=positions["salary_annual"] * positions["commission_rate"] / 12,
-        fringe=positions["salary_annual"] * settings.loc["fringe", "setting"] / 12,
+        fringe=positions["salary_annual"] * fringe / 12,
     ).melt(
         id_vars=[
             "position_id",
@@ -129,4 +140,9 @@ if __name__ == "__main__":
     )
 
     settings, positions, inflation = get_inputs(fpath)
-    forecast(settings, positions, inflation).to_csv(output_path)
+
+    date_df = date_range(settings.loc["start_date", "setting"], settings.loc["months", "setting"])
+
+    print("Here is the date_df\n", date_df)
+
+    forecast(date_df, settings.loc["fringe", "setting"], positions, inflation).to_csv(output_path)
