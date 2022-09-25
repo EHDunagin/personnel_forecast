@@ -51,7 +51,7 @@ def personnel_forecast(date_df, fringe, positions):
     of forecast range with rows for salary bonus commission and fringe.
     """
 
-    # Fill in missing employee start and end dates with min or min timestamps
+    # Fill in missing employee start and end dates with min or max timestamps
     positions["start_date"] = positions["start_date"].fillna(value=pd.Timestamp.min)
     positions["end_date"] = positions["end_date"].fillna(value=pd.Timestamp.max)
 
@@ -87,39 +87,6 @@ def personnel_forecast(date_df, fringe, positions):
         (forecast_df["start_date"] <= forecast_df["month_ends"])
         & (forecast_df["end_date"] >= forecast_df["month_starts"])
     ]
-
-    # -------------------------------------------------------------------------------------------
-    # # TODO Move to a separate function and use after personnel, related, and onetime expenses
-
-    # # Filter to exclude months before start or after end of specific employee
-    # forecast_df = forecast_df[
-    #     (forecast_df["start_date"] <= forecast_df["month_ends"])
-    #     & (forecast_df["end_date"] >= forecast_df["month_starts"])
-    # ]
-
-    # # Calculates proration of month from start and end.
-    # forecast_df["proration"] = (
-    #     (
-    #         forecast_df[["end_date", "month_ends"]].min(axis=1)
-    #         - forecast_df[["start_date", "month_starts"]].max(axis=1)
-    #     ).dt.days
-    #     + 1
-    # ) / ((forecast_df["month_ends"] - forecast_df["month_starts"]).dt.days + 1)
-
-    # # Join inflation data.
-    # forecast_df = pd.merge_asof(
-    #     forecast_df, inflation, left_on="month_starts", right_on="inflation_date"
-    # )
-    # forecast_df["inflation_rate"] = forecast_df["inflation_rate"].fillna(value=1)
-
-    # # Calculates forecast amount from monthly amount, proration, and applicable inflation.
-    # forecast_df["expense_amount"] = (
-    #     forecast_df["expense_amount"]
-    #     * forecast_df["proration"]
-    #     * forecast_df["inflation_rate"]
-    # )
-
-    # -------------------------------------------------------------------------------------------
 
     forecast_df["item"] = forecast_df["expense_type"]
 
