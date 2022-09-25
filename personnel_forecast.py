@@ -37,7 +37,7 @@ def forecast(settings, positions, inflation):
         }
     )
 
-    # Fill in missing start and end dates with min or min timestamps
+    # Fill in missing start and end dates with min or max timestamps
     positions["start_date"] = positions["start_date"].fillna(value=pd.Timestamp.min)
     positions["end_date"] = positions["end_date"].fillna(value=pd.Timestamp.max)
 
