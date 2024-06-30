@@ -9,7 +9,7 @@ However the function could be used with similarly structured Pandas DataFrames t
 
 ### personnel_forecast.forecast(settings, positions, inflation)
 
-For every month from month of start date specified in **settings** for number of months specified, generates a forecast of expense amount
+For every month from the month of the start date specified in **settings** for the number of months specified, generates a forecast of expense amount
 for every employee in **positions** for the categories of salary, bonus, commission, and fringe. These amounts are prorated for the portion
 of the month that the employee is active and scaled for inflation from **inflation**.
 
