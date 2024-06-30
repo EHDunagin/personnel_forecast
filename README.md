@@ -1,7 +1,7 @@
 # personnel_forecast
 ## Simple python model for personnel expense and headcount forecasting
 
-Consists primarily of function **forecast** which uses information about period to forecast, employees, fringe rate, and inflation
+Consists primarily of function **forecast** which uses information about period range, employees, fringe rate, and inflation
 to generate a forecast of personnel expense and month end headcount.
 
 The script is set up to read inputs from an Excel file structured like "personnel_sample.xlsx"and produce a .csv output if run on its own.
